@@ -28,66 +28,66 @@ connectedCallback() {
     this.render();
 }
 
-render() {
-    const id = this.getAttribute('id') || '';
-    const title = this.getAttribute('title') || 'Unknown Title';
-    const image = this.getAttribute('image') || '';
-    const genres = this.getAttribute('genres') ? JSON.parse(this.getAttribute('genres')) : [];
-    const seasons = this.getAttribute('seasons') || '0';
-    const updated = this.getAttribute('updated') || '';
-    
-    const genreNames = GenreService.getNames(genres).slice(0, 2); // limit to 2 genres
+    render() {
+        const id = this.getAttribute('id') || '';
+        const title = this.getAttribute('title') || 'Unknown Title';
+        const image = this.getAttribute('image') || '';
+        // Accept genres as comma-separated string and convert to array of numbers
+        const genresAttr = this.getAttribute('genres');
+        const genres = genresAttr ? genresAttr.split(',').map(g => Number(g.trim())).filter(g => !isNaN(g)) : [];
+        const seasons = this.getAttribute('seasons') || '0';
+        const updated = this.getAttribute('updated') || '';
 
-    this.shadowRoot.innerHTML = `
-        <style>
-            :host {
-                display: block;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                overflow: hidden;
-                cursor: pointer;
-                transition: box-shadow 0.3s ease;
-            }
-            :host(:hover) {
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            img {
-                width: 100%;
-                height: auto;
-                display: block;
-            }
-            .content {
-                padding: 16px;
-            }
-            .title {
-                font-size: 1.2em;
-                margin: 0 0 8px 0;
-            }
-            .meta {
-                font-size: 0.9em;
-                color: #666;
-            }
-        </style>
-        <img src="${image}" alt="${title}">
-        <div class="content">
-            <h3 class="title">${title}</h3>
-            <div class="meta">
-                <div>Genres: ${genreNames.join(', ')}</div>
-                <div>Seasons: ${seasons}</div>
-                <div>Updated: ${DateUtils.formatDate(updated)}</div>
+        const genreNames = GenreService.getNames(genres).slice(0, 2); // limit to 2 genres
+
+        this.shadowRoot.innerHTML = `
+            <style>
+                :host {
+                    display: block;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    transition: box-shadow 0.3s ease;
+                }
+                :host(:hover) {
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                }
+                img {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                }
+                .content {
+                    padding: 16px;
+                }
+                .title {
+                    font-size: 1.2em;
+                    margin: 0 0 8px 0;
+                }
+                .meta {
+                    font-size: 0.9em;
+                    color: #666;
+                }
+            </style>
+            <img src="${image}" alt="${title}">
+            <div class="content">
+                <h3 class="title">${title}</h3>
+                <div class="meta">
+                    <div>Genres: ${genreNames.join(', ')}</div>
+                    <div>Seasons: ${seasons}</div>
+                    <div>Updated: ${DateUtils.formatDate ? DateUtils.formatDate(updated) : (DateUtils.format ? DateUtils.format(updated) : updated)}</div>
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    this.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('podcast-clicked', {
-            detail: { id },
-            bubbles: true,
-            composed: true
-        }));
-    });
-
-
-}
+        this.addEventListener('click', () => {
+            this.dispatchEvent(new CustomEvent('podcast-clicked', {
+                detail: { id },
+                bubbles: true,
+                composed: true
+            }));
+        });
+    }
 }customElements.define('podcast-preview', PodcastPreview);
     
