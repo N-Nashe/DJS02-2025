@@ -15,7 +15,11 @@ function init() {
 
   // Listen for clicks on podcast previews
   document.addEventListener("podcast-clicked", (e) => {
-    createModal.open(e.detail);
+    const podcastId = e.detail.id;
+    const podcast = podcasts.find(p => p.id == podcastId);
+    if (podcast) {
+      createModal.open(podcast);
+    }
   });
 }
 

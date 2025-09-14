@@ -1,5 +1,5 @@
-import { GenreService } from "../utils/GenreService";
-import { DateUtils } from "../utils/DateUtils";
+import { GenreService } from "../utils/GenreService.js";
+import { DateUtils } from "../utils/DateUtils.js";
 
 /** Podcast Preview Component 
 *
