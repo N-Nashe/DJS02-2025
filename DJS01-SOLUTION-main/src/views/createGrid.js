@@ -1,25 +1,26 @@
-import { createPodcastCard } from "../components/createPodcastCard.js";
-import { createModal } from "../components/createModal.js";
+import "../components/PodcastPreview.js";
+import { GenreService } from "../utils/GenreService.js";
 
 /**
- * Grid Renderer - Responsible for rendering the grid of podcast cards.
- *
- * @principle SRP - Manages layout and rendering only; delegates card creation and modal logic elsewhere.
+ * Grid Renderer - Responsible for rendering the grid of podcast previews.
  */
 export const createGrid = () => {
   const container = document.getElementById("podcastGrid");
 
   return {
-    /**
-     * Renders a list of podcast cards into the grid.
-     * @param {Object[]} podcastList - Array of podcast objects.
-     */
     render(podcastList) {
       container.innerHTML = "";
-      podcastList.forEach((p) => {
-        const card = createPodcastCard(p, createModal.open);
-        container.appendChild(card);
+
+      podcastList.forEach(podcast => {
+        const preview = document.createElement("podcast-preview");
+        preview.setAttribute("id", podcast.id);
+        preview.setAttribute("title", podcast.title);
+        preview.setAttribute("image", podcast.image);
+        preview.setAttribute("genres", podcast.genres.join(",")); // IDs
+        preview.setAttribute("seasons", podcast.seasons);
+        preview.setAttribute("updated", podcast.updated);
+        container.appendChild(preview);
       });
-    },
+    }
   };
 };
